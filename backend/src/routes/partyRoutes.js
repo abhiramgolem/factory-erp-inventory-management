@@ -1,4 +1,5 @@
 const express = require('express');
+
 const router = express.Router();
 
 const {
@@ -9,8 +10,11 @@ const {
 } = require('../controllers/partyController');
 
 router.get('/', getParties);
+
 router.post('/', createParty);
+
 router.put('/:id', updateParty);
+
 router.delete('/:id', deleteParty);
 
 module.exports = router;

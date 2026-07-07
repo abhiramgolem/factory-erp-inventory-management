@@ -1,9 +1,9 @@
 const pool = require('../config/db');
 
-exports.getParties = async (req, res) => {
+exports.getStocks = async (req, res) => {
     try {
         const result = await pool.query(
-            'SELECT * FROM party_master ORDER BY id'
+            'SELECT * FROM stock_master ORDER BY id'
         );
 
         res.json(result.rows);
@@ -17,42 +17,24 @@ exports.getParties = async (req, res) => {
     }
 };
 
-exports.createParty = async (req, res) => {
+exports.createStock = async (req, res) => {
     try {
-        const {
-            party_name,
-            phone,
-            address
-        } = req.body;
+        const { stock_name, description } = req.body;
 
         const result = await pool.query(
             `
-            INSERT INTO party_master
-            (
-                party_name,
-                phone,
-                address
-            )
-            VALUES
-            (
-                $1,
-                $2,
-                $3
-            )
+            INSERT INTO stock_master
+            (stock_name, description)
+            VALUES ($1, $2)
             RETURNING *
             `,
-            [
-                party_name,
-                phone,
-                address
-            ]
+            [stock_name, description]
         );
 
         res.status(201).json({
             success: true,
             data: result.rows[0]
         });
-
     } catch (error) {
         console.error(error);
 
@@ -63,39 +45,26 @@ exports.createParty = async (req, res) => {
     }
 };
 
-exports.updateParty = async (req, res) => {
+exports.updateStock = async (req, res) => {
     try {
         const { id } = req.params;
-
-        const {
-            party_name,
-            phone,
-            address
-        } = req.body;
+        const { stock_name, description } = req.body;
 
         const result = await pool.query(
             `
-            UPDATE party_master
-            SET
-                party_name = $1,
-                phone = $2,
-                address = $3
-            WHERE id = $4
+            UPDATE stock_master
+            SET stock_name = $1,
+                description = $2
+            WHERE id = $3
             RETURNING *
             `,
-            [
-                party_name,
-                phone,
-                address,
-                id
-            ]
+            [stock_name, description, id]
         );
 
         res.json({
             success: true,
             data: result.rows[0]
         });
-
     } catch (error) {
         console.error(error);
 
@@ -106,23 +75,19 @@ exports.updateParty = async (req, res) => {
     }
 };
 
-exports.deleteParty = async (req, res) => {
+exports.deleteStock = async (req, res) => {
     try {
         const { id } = req.params;
 
         await pool.query(
-            `
-            DELETE FROM party_master
-            WHERE id = $1
-            `,
+            'DELETE FROM stock_master WHERE id = $1',
             [id]
         );
 
         res.json({
             success: true,
-            message: 'Party deleted successfully'
+            message: 'Stock deleted successfully'
         });
-
     } catch (error) {
         console.error(error);
 
