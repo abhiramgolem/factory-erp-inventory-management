@@ -1,9 +1,9 @@
 const pool = require('../config/db');
 
-exports.getDrivers = async (req, res) => {
+exports.getParties = async (req, res) => {
     try {
         const result = await pool.query(
-            'SELECT * FROM driver_master ORDER BY id'
+            'SELECT * FROM party_master ORDER BY id'
         );
 
         res.json(result.rows);
@@ -17,29 +17,24 @@ exports.getDrivers = async (req, res) => {
     }
 };
 
-exports.createDriver = async (req, res) => {
+exports.createParty = async (req, res) => {
     try {
-        const {
-            driver_name,
-            phone,
-            vehicle_number
-        } = req.body;
+        const { party_name, phone, address } = req.body;
 
         const result = await pool.query(
             `
-            INSERT INTO driver_master
-            (driver_name, phone, vehicle_number)
+            INSERT INTO party_master
+            (party_name, phone, address)
             VALUES ($1, $2, $3)
             RETURNING *
             `,
-            [driver_name, phone, vehicle_number]
+            [party_name, phone, address]
         );
 
         res.status(201).json({
             success: true,
             data: result.rows[0]
         });
-
     } catch (error) {
         console.error(error);
 
@@ -50,34 +45,27 @@ exports.createDriver = async (req, res) => {
     }
 };
 
-exports.updateDriver = async (req, res) => {
+exports.updateParty = async (req, res) => {
     try {
         const { id } = req.params;
-
-        const {
-            driver_name,
-            phone,
-            vehicle_number
-        } = req.body;
+        const { party_name, phone, address } = req.body;
 
         const result = await pool.query(
             `
-            UPDATE driver_master
-            SET
-                driver_name = $1,
+            UPDATE party_master
+            SET party_name = $1,
                 phone = $2,
-                vehicle_number = $3
+                address = $3
             WHERE id = $4
             RETURNING *
             `,
-            [driver_name, phone, vehicle_number, id]
+            [party_name, phone, address, id]
         );
 
         res.json({
             success: true,
             data: result.rows[0]
         });
-
     } catch (error) {
         console.error(error);
 
@@ -88,20 +76,19 @@ exports.updateDriver = async (req, res) => {
     }
 };
 
-exports.deleteDriver = async (req, res) => {
+exports.deleteParty = async (req, res) => {
     try {
         const { id } = req.params;
 
         await pool.query(
-            'DELETE FROM driver_master WHERE id = $1',
+            'DELETE FROM party_master WHERE id = $1',
             [id]
         );
 
         res.json({
             success: true,
-            message: 'Driver deleted successfully'
+            message: 'Party deleted successfully'
         });
-
     } catch (error) {
         console.error(error);
 
