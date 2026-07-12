@@ -5,6 +5,7 @@ const pool = require('./config/db');
 const driverRoutes = require('./routes/driverRoutes');
 const partyRoutes = require('./routes/partyRoutes');
 const stockRoutes = require('./routes/stockRoutes');
+const transportRoutes = require('./routes/transportRoutes');
 
 require('dotenv').config();
 
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/drivers', driverRoutes);
 app.use('/api/parties', partyRoutes);
 app.use('/api/stocks', stockRoutes);
+app.use('/api/transports', transportRoutes);
 
 app.get('/', (req, res) => {
     res.json({
