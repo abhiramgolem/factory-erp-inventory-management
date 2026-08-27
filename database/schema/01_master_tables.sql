@@ -1,6 +1,6 @@
 CREATE TABLE stock_master (
     id SERIAL PRIMARY KEY,
-    stock_name VARCHAR(100) UNIQUE NOT NULL,
+    stock_name VARCHAR(110) UNIQUE NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
